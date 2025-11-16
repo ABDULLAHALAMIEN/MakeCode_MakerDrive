@@ -24,16 +24,6 @@ enum MotorDirection {
     Backward = 1
 };
 
-// Servo Channel.
-enum ServoChannel {
-    S1 = REG_ADD_SERVO_1,
-    S2 = REG_ADD_SERVO_2,
-    S3 = REG_ADD_SERVO_3,
-    S4 = REG_ADD_SERVO_4,
-
-    //% block="all"
-    All = 1000,
-};
 
 
 
@@ -123,54 +113,3 @@ namespace rekabit {
                 break;
         }
     }
-
-
-    /**
-     * Disable the servo.
-     * @param servo Servo channel.
-     */
-    //% group="Servos"
-    //% weight=18
-    //% blockGap=8
-    //% blockId=rekabit_disable_servo
-    //% block="disable servo %servo"
-    export function disableServo(servo: ServoChannel): void {
-        if (servo == ServoChannel.All) {
-            rekabit.i2cWrite(ServoChannel.S1, 0);
-            rekabit.i2cWrite(ServoChannel.S2, 0);
-            rekabit.i2cWrite(ServoChannel.S3, 0);
-			rekabit.i2cWrite(ServoChannel.S4, 0);
-        }
-        else {
-            rekabit.i2cWrite(servo, 0);
-        }
-    }
-
-
-    /**
-     * Set the position for servo (0-180 degrees).
-     * @param servo Servo channel.
-     * @param position Servo positon. eg: 90
-     */
-    //% group="Servos"
-    //% weight=17
-    //% blockGap=40
-    //% blockId=rekabit_set_servo_position
-    //% block="set servo %servo position to %position degrees"
-    //% position.min=0 position.max=180
-    export function setServoPosition(servo: ServoChannel, position: number): void {
-        position = rekabit.limit(position, 0, 180);
-
-        let pulseWidth = position * 20 / 18 + 50
-        if (servo == ServoChannel.All) {
-            rekabit.i2cWrite(ServoChannel.S1, pulseWidth);
-            rekabit.i2cWrite(ServoChannel.S2, pulseWidth);
-            rekabit.i2cWrite(ServoChannel.S3, pulseWidth);
-			rekabit.i2cWrite(ServoChannel.S4, pulseWidth);
-        }
-        else {
-            rekabit.i2cWrite(servo, pulseWidth);
-        }
-    }
-
-}
